@@ -48,14 +48,14 @@ public class UserController {
         String password = request.getParameter("pwd");
         String email = request.getParameter("email");
         String username = request.getParameter("name");
-        System.out.println(email);
+        //System.out.println(email);
         User user1 = userService.queryByName(username);
         if (user1 != null){
             model.addAttribute("lmsg","用户名已存在,请重新输入");
             return "register";
         }
         User user2 = userService.queryByEmail(email);
-        System.out.println(user2);
+        //System.out.println(user2);
         if (user2 != null){
             model.addAttribute("lmsg","邮箱已存在,请重新输入");
             return "register";
@@ -154,11 +154,19 @@ public class UserController {
             if (!password1.equals(password2)) {
                 model.addAttribute("pmsg","用户密码错误");
             } else {
+                //先清空cookie
+                Utils.closeCookie(request, response);
+                //清空session
+                request.getSession().removeAttribute("username");
+                request.getSession().removeAttribute("userid");
+                request.getSession().removeAttribute("user");
                 Integer userid = user1.getId();
-                Cookie cookieId = new Cookie("userid",userid.toString());
-                Cookie cookikeName = new Cookie("username",user1.getUsername());
-                response.addCookie(cookieId);
-                response.addCookie(cookikeName);
+//                Cookie cookieId = new Cookie("userid",userid.toString());
+//                Cookie cookikeName = new Cookie("username",user1.getUsername());
+//                response.addCookie(cookieId);
+//                response.addCookie(cookikeName);
+//                cookieId.setPath("/");
+//                cookieId.setPath("/");
 //                session.setAttribute("user",user1);
 //                session.setAttribute("user",user1);
                 //将用户的type修改成1，说明登录成功
@@ -186,8 +194,9 @@ public class UserController {
                 userNameCookie.setPath("/");
                 response.addCookie(userIdCookie);
                 response.addCookie(userNameCookie);
-                request.getSession().setAttribute("username",username);
+                request.getSession().setAttribute("username",user1.getUsername());
                 request.getSession().setAttribute("userid",userid);
+                request.getSession().setAttribute("user",user1);
                 model.addAttribute("username",user1.getUsername());
                 model.addAttribute("userid",user1.getId());
                 return "index";
@@ -216,11 +225,19 @@ public class UserController {
            if (!password1.equals(password2)) {
                model.addAttribute("pmsg","用户密码错误");
            } else {
+               //先清空cookie
+               Utils.closeCookie(request, response);
+               //清空session
+               request.getSession().removeAttribute("username");
+               request.getSession().removeAttribute("userid");
+               request.getSession().removeAttribute("user");
                Integer userid = user1.getId();
-               Cookie cookieId = new Cookie("userid",userid.toString());
-               Cookie cookikeName = new Cookie("username",user1.getUsername());
-               response.addCookie(cookieId);
-               response.addCookie(cookikeName);
+//               Cookie cookieId = new Cookie("userid",userid.toString());
+//               Cookie cookikeName = new Cookie("username",user1.getUsername());
+//               response.addCookie(cookieId);
+//               response.addCookie(cookikeName);
+//               cookieId.setPath("/");
+//               cookieId.setPath("/");
 //                session.setAttribute("user",user1);
 //                session.setAttribute("user",user1);
                //将用户的type修改成1，说明登录成功
@@ -244,12 +261,13 @@ public class UserController {
                String username = user1.getUsername();
                Cookie userNameCookie = new Cookie("username",username);
                Cookie userIdCookie = new Cookie("userid",userid.toString());
-               userNameCookie.setPath("/");
-               userNameCookie.setPath("/");
                response.addCookie(userIdCookie);
                response.addCookie(userNameCookie);
-               request.getSession().setAttribute("username",username);
+               userNameCookie.setPath("/");
+               userIdCookie.setPath("/");
+               request.getSession().setAttribute("username",name);
                request.getSession().setAttribute("userid",userid);
+               request.getSession().setAttribute("user",user1);
                model.addAttribute("username",user1.getUsername());
                model.addAttribute("userid",user1.getId());
                return "index";
@@ -268,7 +286,7 @@ public class UserController {
     @RequestMapping("outLogin")
     public String outLogin(HttpServletRequest request,HttpServletResponse response){
 //        String username = (String)request.getSession().getAttribute("username");
-        Integer userid = (Integer) request.getSession().getAttribute("userid");
+       // Integer userid = (Integer) request.getSession().getAttribute("userid");
 //        //将该用户的type修改成0，表示该用户注销退出登录
 //        userService.updateType0(userid);
         //删除session中用户的值
@@ -276,10 +294,12 @@ public class UserController {
 //        request.getSession().removeAttribute("user");
 //        request.getSession().removeAttribute("username");
         Cookie[] cookies = request.getCookies();
-        for (Cookie cookie : cookies) {
-            cookie.setMaxAge(0);
-            cookie.setPath("/");
-            response.addCookie(cookie);
+        if (cookies != null){
+            for (Cookie cookie : cookies) {
+                cookie.setMaxAge(0);
+                cookie.setPath("/");
+                response.addCookie(cookie);
+            }
         }
         //用户注销之后返回游客页面
         return "index";
@@ -373,32 +393,79 @@ public class UserController {
     }
 
     //修改用户名跳转页面
-    @RequestMapping("User")
+    @RequestMapping("userUp")
     public String User(HttpServletRequest request,Model model){
         HttpSession session = request.getSession();
         User user = (User) session.getAttribute("user");
+        //System.out.println(user);
         String username = null;
         String email = null;
         if (user!=null){
             username = user.getUsername();
             email = user.getEmail();
         }
-
-        session.setAttribute("username",username);
-        session.setAttribute("email",email);
+        model.addAttribute("username",username);
+        model.addAttribute("email",email);
         return "User";
     }
 
     @PostMapping("updateUser")
-    public String updateUser(HttpServletRequest request,User user,HttpServletResponse response) throws Exception{
+    public String updateUser(HttpServletRequest request,HttpServletResponse response,Model model) throws Exception{
         response.setContentType("text/html;charset=utf-8");
         request.setCharacterEncoding("utf-8");
-
+        String username1 = (String) request.getSession().getAttribute("username");
+        User user4 = (User) request.getSession().getAttribute("user");
         String username = request.getParameter("username");
         String email = request.getParameter("email");
-        userService.updateUsername(username,email);
+        User user1 = userService.queryByName(username);
+        User user2 = userService.queryByEmail(email);
+        User user3 = userService.queryByNameAndEmail(username, email);
+//        System.out.println(user3);
+//        System.out.println(user4);
+        if (user4.equals(user3)){
+            model.addAttribute("lmsg","未进行修改");
+            model.addAttribute("username",username);
+            model.addAttribute("email",email);
+            return "User";
+        }
+        if (user1 != null && !user4.equals(user1)){
+            model.addAttribute("lmsg","用户名已存在,请重新输入");
+            model.addAttribute("username",username);
+            model.addAttribute("email",email);
+            return "User";
+        }
+        //System.out.println(user2);
+        if (user2 != null && !user4.equals(user2)){
+            model.addAttribute("lmsg","邮箱已存在,请重新输入");
+            model.addAttribute("username",username);
+            model.addAttribute("email",email);
+            return "User";
+        }
+
+        userService.updateUsername(username1,username,email);
+//        //先清空cookie
+//        Utils.closeCookie(request, response);
+//        //清空session
+//        request.getSession().removeAttribute("username");
+//        request.getSession().removeAttribute("userid");
+//        request.getSession().removeAttribute("user");
+        //修改缓存信息
+        User user5 = userService.queryByNameAndEmail(username, email);
+        Cookie userNameCookie = new Cookie("username",username);
+        Cookie userIdCookie = new Cookie("userid",user5.getId().toString());
+        response.addCookie(userIdCookie);
+        response.addCookie(userNameCookie);
+        userNameCookie.setPath("/");
+        userIdCookie.setPath("/");
+        Integer userId = user5.getId();
         request.getSession().setAttribute("username",username);
-        return "success";
+        request.getSession().setAttribute("userid",userId.toString());
+        request.getSession().setAttribute("user",user5);
+        model.addAttribute("username",username);
+        model.addAttribute("userid",userId);
+//        request.getSession().setAttribute("username",username);
+//        request.getSession().setAttribute("lsmg","修改成功请重新登录");
+        return "index";
     }
 
 

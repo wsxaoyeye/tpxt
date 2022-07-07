@@ -45,11 +45,15 @@ public class UserService {
 //    public void updateUser(User user){
 //        {
 //    }
-    public void updateUsername(@Param("username")String username, @Param("email") String email){
-        userMapper.updateUsername(username,email);
+    public void updateUsername(String usernameOld,String usernameNew, String email){
+        userMapper.updateUsername( usernameOld,usernameNew,email);
     }
 
     public User queryByName(String name) {
         return userMapper.queryByName(name);
+    }
+
+    public User queryByNameAndEmail(String username,String email){
+        return userMapper.queryByNameAndEmail(username,email);
     }
 }

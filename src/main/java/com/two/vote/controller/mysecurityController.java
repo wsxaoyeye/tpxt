@@ -25,6 +25,11 @@ public class mysecurityController {
         return "login";
     }
 
+    @GetMapping("byUsernameLogin")
+    public String byusername(){
+        return "byusername";
+    }
+
     /**
      * 注册
      * @return
