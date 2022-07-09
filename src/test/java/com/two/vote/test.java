@@ -7,6 +7,7 @@ import com.two.vote.dao.VoteDao;
 import com.two.vote.entity.*;
 import com.two.vote.entity.view.ArticleAndFlag;
 import com.two.vote.entity.view.ValueAndName;
+import com.two.vote.service.ScoreService;
 import com.two.vote.service.UserService;
 import com.two.vote.service.impl.ChartServiceImpl;
 import com.two.vote.service.impl.CommonServiceImpl;
@@ -56,6 +57,9 @@ public class test {
 
     @Autowired
     private CommonServiceImpl commonService;
+
+    @Autowired
+    private ScoreService scoreService;
 
     @Test
     public void aa(){
@@ -255,6 +259,14 @@ public class test {
 //        String valueString = split[1].substring(split[1].indexOf("]")-1,split[1].indexOf("]"));
         String valueString = split[1].replace("]", "");
         System.out.println(valueString);
+    }
+
+    @Test
+    public void testSetScore(){
+        Score score = new Score(null,"100",12345);
+
+        int i = scoreService.setScore("100","12345");
+        System.out.println(i);
     }
 
 }

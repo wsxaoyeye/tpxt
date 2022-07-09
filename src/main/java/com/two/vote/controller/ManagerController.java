@@ -18,6 +18,9 @@ import javax.servlet.http.HttpSession;
 import java.text.DecimalFormat;
 import java.util.List;
 
+/**
+ * @投票管理
+ */
 @Controller
 public class ManagerController {
 
@@ -31,6 +34,9 @@ public class ManagerController {
     private UserService userService;
 
 
+    /**
+     *投票列表
+     */
     @GetMapping("managerVoteList/{userId}")
     public String getManagerVoteList(@PathVariable("userId") long userId, Model model, HttpServletRequest request){
         HttpSession session = request.getSession();
@@ -45,12 +51,18 @@ public class ManagerController {
         return "tipPage/voteError";
     }
 
+    /**
+     * 删除投票（删两表）
+     */
     @GetMapping("deleteArticle/{articleId}/{userId}")
     public String deleteArticle(@PathVariable("articleId") long articleId,@PathVariable("userId") Integer userId){
         managerService.deleteArticleAndOptions(articleId);
         return "redirect:/managerVoteList/"+userId;
     }
 
+    /**
+     *查看投票数据
+     */
     @GetMapping("manageCheckResult/{id}")
     public String manageCheckResult(@PathVariable("id") long articid,Model model,HttpServletRequest request){
         CommonUtil.setUserNameIdByCookie(request,model);
@@ -74,6 +86,9 @@ public class ManagerController {
         return "chart";
     }
 
+    /**
+     * 修改投票
+     */
     @GetMapping("retrunVote/{id}")
     public String retrunVote(@PathVariable("id")long articleid,Model model,HttpServletRequest request){
         CommonUtil.setUserNameIdByCookie(request,model);
