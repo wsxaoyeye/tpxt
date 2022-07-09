@@ -15,6 +15,7 @@
         }
     </style>
 </head>
+
 <body onload="map()">
 <div class="header-area home1">
     <div class="container">
@@ -45,6 +46,7 @@
                     </ul>
                 </div>
             </div>
+
             <div class="col-xs-12 col-sm-6 col-md-3 col-lg-3">
                 <div class="header-info">
                     <ul>
@@ -61,8 +63,8 @@
             </div>
         </div>
     </div>
-
 </div>
+
 <div class="slider-area home1">
     <br>
     <br>
@@ -122,19 +124,20 @@
             </div>
         </div>
     </div>
+
     <div class="row">
         <div class="col-lg-1"></div>
         <div class="col-lg-5">
         <div class="well" style="background-color: white;height: 400px;width: 640px">
             <h4>投票结果</h4>
-            <br>
-            <br>
-            <br>
-            <br>
-            <br>
+            <h4>评委打分:</h4>
+            <h3 style="color: mediumvioletred" th:text="${score}"></h3>
+            <h4>最终得分:</h4>
+            <h3 style="color: mediumvioletred" th:text="${total*0.6+resultView.hot*0.4}"></h3>
             <br>
             <br>
             <table>
+
                 <tr th:each="option : ${resultView.optionAndNumViews}">
                     <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
                     <td th:text="${option.optionvalue}"></td>

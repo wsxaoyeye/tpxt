@@ -79,6 +79,9 @@ public class CommonController {
         return ResponseEntity.ok(voteList);
     }
 
+    /**
+     * 投票详情页(链接)
+     */
     @GetMapping("/voteDetail/{id}")
     public String getVoteDetail(@PathVariable("id") long id, Model model,HttpServletRequest request){
         CommonUtil.setUserNameIdByCookie(request,model);
@@ -88,6 +91,9 @@ public class CommonController {
         return "detail";
     }
 
+    /**
+     * 投票
+     */
     @PostMapping("submitVote")
     public String submitVote(HttpServletRequest request,Model model){
         String articleid = request.getParameter("articleid");
@@ -133,6 +139,9 @@ public class CommonController {
         return ResponseEntity.ok(articleid);
     }
 
+    /**
+     * 查看投票
+     */
     @GetMapping("checkResult/{id}")
     public String getCheckResult(@PathVariable("id") long articleid,Model model,HttpServletRequest request){
         CommonUtil.setUserNameIdByCookie(request,model);
