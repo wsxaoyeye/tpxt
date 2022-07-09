@@ -23,6 +23,7 @@ import org.springframework.util.StringUtils;
 
 import javax.persistence.Table;
 import javax.transaction.Transactional;
+import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
@@ -263,9 +264,12 @@ public class test {
 
     @Test
     public void testSetScore(){
-        Score score = new Score(null,"100",12345);
 
-        int i = scoreService.setScore("100","12345");
+        BigDecimal bigDecimal = BigDecimal.valueOf(1234);
+        long l = Long.parseLong("123");
+        Score score = new Score(null,bigDecimal,l);
+
+        int i = scoreService.insetScore(score);
         System.out.println(i);
     }
 

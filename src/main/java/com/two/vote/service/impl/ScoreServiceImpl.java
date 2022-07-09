@@ -13,6 +13,11 @@ public class ScoreServiceImpl implements ScoreService {
     private ScoreDao scoreDao;
 
     @Override
+    public int insetScore(Score score) {
+        return scoreDao.insetScore(score);
+    }
+
+    @Override
     public Score getScore(Integer scoreid) {
         return scoreDao.getScore(scoreid);
     }
