@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.two.vote.dao.ScoreDao">
+
+
+<!--    Score getScore(int scoreid);-->
+    <select id="getScore" resultType="com.two.vote.entity.Score">
+        select fraction from score where scoreid=#{scoreid}
+    </select>
+
+<!--    int setScore(String score,String articleid);-->
+    <insert id="setScore">
+        insert into score(fraction,acticleid) values (fraction=#{fraction},acticleid=#{acticleid})
+    </insert>
+</mapper>

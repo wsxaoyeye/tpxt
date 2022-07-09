@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,7 +20,7 @@ public class ScoreController {
     private ScoreService scoreService;
 
     @RequestMapping("setScore")
-    public String setScore(String score,String articleid){
+    public String setScore(BigDecimal score, Integer articleid){
         System.out.println(score);
         scoreService.setScore(score,articleid);
 //        String route ="redirect:/managerVoteList/"+userid;

@@ -4,6 +4,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.math.BigDecimal;
+
 //@Entity
 @Data
 @AllArgsConstructor
@@ -12,7 +14,7 @@ import lombok.NoArgsConstructor;
 public class Score {
 //    @Id
     private Integer scoreid;
-    private String fraction;
+    private BigDecimal fraction;
     private Integer articleid;
 
 
